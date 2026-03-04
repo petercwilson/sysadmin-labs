@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // Pre-loaded teaching modules
+// Pre-loaded teaching modules
 const trainingModules = [
   {
     id: 'tm-1',
@@ -45,6 +46,34 @@ const trainingModules = [
         concept: 'Trace Network Path', 
         cli: 'traceroute 8.8.8.8', 
         explanation: 'Maps the journey your packets take to reach a destination, showing every router hop along the way. Great for pinpointing where a connection is dropping.' 
+      }
+    ]
+  },
+  {
+    id: 'tm-3',
+    title: 'Web Server Provisioning (Nginx)',
+    category: 'Web Services',
+    description: 'Deploy and secure a high-performance Nginx web server. Essential for hosting websites, reverse proxying, and load balancing.',
+    lessons: [
+      { 
+        concept: 'Install Nginx', 
+        cli: 'sudo apt update && sudo apt install nginx -y', 
+        explanation: 'Always update your package lists before installing. The -y flag automatically answers "yes" to the installation prompts.' 
+      },
+      { 
+        concept: 'Enable & Start Service', 
+        cli: 'sudo systemctl enable --now nginx', 
+        explanation: 'Systemd is the initialization system for modern Linux. This command starts the Nginx service immediately AND ensures it boots up automatically if the server restarts.' 
+      },
+      { 
+        concept: 'Configure Firewall (UFW)', 
+        cli: "sudo ufw allow 'Nginx Full'", 
+        explanation: 'Opens ports 80 (HTTP) and 443 (HTTPS) in the Uncomplicated Firewall so outside traffic can actually reach your web server.' 
+      },
+      { 
+        concept: 'Verify Service Status', 
+        cli: 'systemctl status nginx', 
+        explanation: 'Checks if the service is actively running and displays recent log outputs. Press "q" to exit this view in the terminal.' 
       }
     ]
   }
