@@ -1,63 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { db } from './config/firebase';
-import { 
-  collection, 
-  onSnapshot, 
-  addDoc, 
-  deleteDoc, 
-  doc, 
-  serverTimestamp,
-  query,
-  orderBy
-} from 'firebase/firestore';
 
 export default function App() {
-  const [labs, setLabs] = useState([]);
+  // Initialize state from local storage to keep data persistent in the browser
+  const [labs, setLabs] = useState(() => {
+    const savedLabs = localStorage.getItem('cyber-lab-modules');
+    return savedLabs ? JSON.parse(savedLabs) : [];
+  });
+  
   const [formData, setFormData] = useState({ title: '', category: '', description: '' });
 
-  // Real-time listener for the 'labs' collection
+  // Save to local storage whenever the labs array changes
   useEffect(() => {
-    const q = query(collection(db, 'labs'), orderBy('createdAt', 'desc'));
-    
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const labsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setLabs(labsData);
-    });
+    localStorage.setItem('cyber-lab-modules', JSON.stringify(labs));
+  }, [labs]);
 
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
-
-  const handleCreateLab = async (e) => {
+  const handleCreateLab = (e) => {
     e.preventDefault();
     if (!formData.title || !formData.category) return;
 
-    try {
-      await addDoc(collection(db, 'labs'), {
-        ...formData,
-        createdAt: serverTimestamp()
-      });
-      setFormData({ title: '', category: '', description: '' });
-    } catch (error) {
-      console.error("Error adding document: ", error);
-    }
+    const newLab = {
+      id: crypto.randomUUID(),
+      ...formData,
+      createdAt: new Date().toISOString()
+    };
+
+    setLabs([newLab, ...labs]);
+    setFormData({ title: '', category: '', description: '' });
   };
 
-  const handleDeleteLab = async (id) => {
-    try {
-      await deleteDoc(doc(db, 'labs', id));
-    } catch (error) {
-      console.error("Error deleting document: ", error);
-    }
+  const handleDeleteLab = (id) => {
+    setLabs(labs.filter(lab => lab.id !== id));
   };
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-300 font-mono p-8 flex flex-col items-center">
       <header className="w-full max-w-4xl mb-8 border-b border-cyan-800 pb-4">
-        <h1 className="text-3xl font-bold text-cyan-400">~/Sysadmin_Labs</h1>
+        <h1 className="text-3xl font-bold text-cyan-400">~/Cyber-Lab</h1>
         <p className="text-gray-500 text-sm mt-1">Interactive Linux & Networking Modules</p>
       </header>
 
@@ -74,7 +52,7 @@ export default function App() {
                 className="w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-gray-200 focus:outline-none focus:border-cyan-500"
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
-                placeholder="e.g., SSH Key Auth"
+                placeholder="e.g., UFW Firewall Setup"
               />
             </div>
             <div>
