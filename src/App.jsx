@@ -144,7 +144,7 @@ export default function App() {
     <div className="min-h-screen bg-gray-900 text-gray-300 font-mono p-8 flex flex-col items-center">
       <header className="w-full max-w-5xl mb-6 border-b border-cyan-800 pb-4 flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-bold text-cyan-400">~/Cyber-Lab</h1>
+          <h1 className="text-3xl font-bold text-cyan-400">~/Sysadmin Labs</h1>
           <p className="text-gray-500 text-sm mt-1">Linux Command Reference & Study Tracker</p>
         </div>
         
